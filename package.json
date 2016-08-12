@@ -1,0 +1,25 @@
+{
+  "name": "atgbg",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/austintgriffith/atgbg.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/austintgriffith/atgbg/issues"
+  },
+  "homepage": "https://github.com/austintgriffith/atgbg#readme",
+  "dependencies": {
+    "fs": "0.0.2",
+    "http": "0.0.0",
+    "node-osascript": "^1.0.4",
+    "request": "^2.74.0"
+  }
+}
