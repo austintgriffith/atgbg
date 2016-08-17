@@ -28,6 +28,7 @@ var download = function(uri, filename, callback){
     request(uri).pipe(fs.createWriteStream(filename)).on('close', callback);
   });
 };
+var FILESIZELIMIT = 500000;
 try{fs.mkdirSync("images");}catch(err) {}
 function refreshBackground(){
     console.log("Loading images...");
@@ -39,7 +40,7 @@ function refreshBackground(){
             var finalImage = __dirname+'/images/'+downAs;
             var size = fs.statSync(finalImage)['size'];
             console.log("size:"+size);
-            if(size<100000){
+            if(size<FILESIZELIMIT){
                 setTimeout(refreshBackground,1000);
             }else{
                 console.log('Setting background '+finalImage+'...');
