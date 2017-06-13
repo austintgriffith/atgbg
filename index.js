@@ -1,12 +1,14 @@
 console.log("setting desktop background to random reddit image...");
-var http = require('http');
+var https = require('https');
 var request = require('request');
 var fs = require("fs");
 var osascript = require('node-osascript');
 function getImages(callback) {
-    return http.get({
+    var path = getPath();
+    console.log("Hitting reddit "+path+" ...");
+    return https.get({
         host: 'www.reddit.com',
-        path: '/r/EarthPorn.json'
+        path: path
     }, function(response) {
         // Continuously update stream with data
         var body = '';
@@ -14,7 +16,7 @@ function getImages(callback) {
             body += d;
         });
         response.on('end', function() {
-
+            //console.log(body);
             // Data reception is done, do whatever with it!
             var parsed = JSON.parse(body);
             callback(parsed);
@@ -28,11 +30,12 @@ var download = function(uri, filename, callback){
     request(uri).pipe(fs.createWriteStream(filename)).on('close', callback);
   });
 };
-var FILESIZELIMIT = 500000;
+var FILESIZELIMIT = 200000;
 try{fs.mkdirSync("images");}catch(err) {}
 function refreshBackground(){
     console.log("Loading images...");
     getImages(function(response){
+        //console.log(response);
         var randIndex = Math.floor(Math.random()*(response.data.children.length));
         var downAs = Math.floor(Math.random()*99999);
         console.log("Downloading "+response.data.children[randIndex].data.url);
@@ -52,5 +55,12 @@ function refreshBackground(){
         });
     })
 }
-setInterval(refreshBackground, 3600000);
+function getPath(){
+  if(Math.random()>0.4){
+    return '/r/itookapicture.json'
+  }else{
+    return '/r/EarthPorn.json'
+  }
+}
+setInterval(refreshBackground, 300000);
 refreshBackground();
