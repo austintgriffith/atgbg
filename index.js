@@ -39,28 +39,37 @@ function refreshBackground(){
         var randIndex = Math.floor(Math.random()*(response.data.children.length));
         var downAs = Math.floor(Math.random()*99999);
         console.log("Downloading "+response.data.children[randIndex].data.url);
-        download(response.data.children[randIndex].data.url,"images/"+downAs, function(){
-            var finalImage = __dirname+'/images/'+downAs;
-            var size = fs.statSync(finalImage)['size'];
-            console.log("size:"+size);
-            if(size<FILESIZELIMIT){
-                setTimeout(refreshBackground,1000);
-            }else{
-                console.log('Setting background '+finalImage+'...');
-                osascript.execute('tell application "System Events" to set picture of every desktop to "'+finalImage+'"', function(err, result, raw){
-                  if (err) return console.error(err)
-                  console.log(result, raw)
-                });
-            }
-        });
+        let over18 = response.data.children[randIndex].data.over_18;
+        console.log("over18:",over18)
+        if(over18){
+          console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!OVER 18! SKIP")
+        }else{
+          download(response.data.children[randIndex].data.url,"images/"+downAs, function(){
+              var finalImage = __dirname+'/images/'+downAs;
+              var size = fs.statSync(finalImage)['size'];
+              console.log("size:"+size);
+              if(size<FILESIZELIMIT){
+                  setTimeout(refreshBackground,1000);
+              }else{
+                  console.log('Setting background '+finalImage+'...');
+                  osascript.execute('tell application "System Events" to set picture of every desktop to "'+finalImage+'"', function(err, result, raw){
+                    if (err) return console.error(err)
+                    console.log(result, raw)
+                  });
+              }
+          });
+        }
+
     })
 }
 function getPath(){
-  if(Math.random()>0.4){
+  if(Math.random()>0){
     return '/r/itookapicture.json'
+//  }else if(Math.random()>0.3){
+  //  return '/r/MostBeautiful.json'
   }else{
     return '/r/EarthPorn.json'
   }
 }
-setInterval(refreshBackground, 300000);
+setInterval(refreshBackground, 120000);
 refreshBackground();
