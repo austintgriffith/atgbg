@@ -63,7 +63,7 @@ function refreshBackground(){
     })
 }
 function getPath(){
-  if(Math.random()>0){
+  if(Math.random()>0.3){
     return '/r/itookapicture.json'
 //  }else if(Math.random()>0.3){
   //  return '/r/MostBeautiful.json'
