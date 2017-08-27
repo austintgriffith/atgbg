@@ -2,7 +2,12 @@ console.log("setting desktop background to random reddit image...");
 var https = require('https');
 var request = require('request');
 var fs = require("fs");
+var mime = require('mime');
 var osascript = require('node-osascript');
+
+
+
+
 function getImages(callback) {
     var path = getPath();
     console.log("Hitting reddit "+path+" ...");
@@ -27,7 +32,13 @@ var download = function(uri, filename, callback){
   request.head(uri, function(err, res, body){
     console.log('content-type:', res.headers['content-type']);
     console.log('content-length:', res.headers['content-length']);
-    request(uri).pipe(fs.createWriteStream(filename)).on('close', callback);
+    if( res.headers['content-type']!="image/jpeg" && res.headers['content-type']!="image/png" ){
+      console.log("WRONG TYPE, TRY AGAIN")
+      setTimeout(refreshBackground,1000);
+    }else{
+      request(uri).pipe(fs.createWriteStream(filename)).on('close', callback);
+    }
+
   });
 };
 var FILESIZELIMIT = 200000;
@@ -48,7 +59,10 @@ function refreshBackground(){
               var finalImage = __dirname+'/images/'+downAs;
               var size = fs.statSync(finalImage)['size'];
               console.log("size:"+size);
-              if(size<FILESIZELIMIT){
+            //  var type = mime.lookup(__dirname+'/images/'+downAs);
+            //  console.log("type:"+type);
+              //|| type=="application/octet-stream"
+              if(size<FILESIZELIMIT ){
                   setTimeout(refreshBackground,1000);
               }else{
                   console.log('Setting background '+finalImage+'...');
@@ -62,6 +76,9 @@ function refreshBackground(){
 
     })
 }
+
+//https://www.reddit.com/r/ImaginaryLandscapes/
+
 function getPath(){
   if(Math.random()>0.3){
     return '/r/itookapicture.json'
